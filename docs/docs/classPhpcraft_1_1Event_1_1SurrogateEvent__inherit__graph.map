@@ -1,0 +1,8 @@
+<map id="Phpcraft\Event\SurrogateEvent" name="Phpcraft\Event\SurrogateEvent">
+<area shape="rect" id="node1" title=" " alt="" coords="112,71,296,112"/>
+<area shape="rect" id="node3" href="$classPhpcraft_1_1Event_1_1SurrogateClientEvent.html" title=" " alt="" coords="344,5,528,47"/>
+<area shape="rect" id="node5" href="$classPhpcraft_1_1Event_1_1SurrogateConsoleEvent.html" title=" " alt="" coords="344,71,528,112"/>
+<area shape="rect" id="node6" href="$classPhpcraft_1_1Event_1_1SurrogateTickEvent.html" title=" " alt="" coords="344,136,528,177"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,78,64,105"/>
+<area shape="rect" id="node4" href="$classPhpcraft_1_1Event_1_1SurrogateConnectEvent.html" title=" " alt="" coords="576,5,760,47"/>
+</map>
