@@ -40,6 +40,19 @@ Now that you've got Surrogate all set up, you can start it using:
 php surrogate.php
 ```
 
+## Updating Surrogate
+
+To update Surrogate and its dependencies:
+
+``` Bash
+git stash
+git pull
+composer update --no-dev --no-suggest --ignore-platform-reqs
+git stash pop
+``` 
+
+If you have made local changes, they will be saved and re-applied after the update.
+
 ## Configuration
 
 After having started Surrogate at least once, you will find a "config" folder containing the "Phpcraft Surrogate.json" configuration file.
