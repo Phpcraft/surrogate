@@ -1,0 +1,13 @@
+{
+	"autoload": {
+		"psr-4": {
+			"Phpcraft\\": "src/"
+		}
+	},
+	"require": {
+		"php": "^7.1",
+		"ext-gmp": "*",
+		"ext-json": "*",
+		"timmyrs/phpcraft": "dev-master"
+	}
+}
