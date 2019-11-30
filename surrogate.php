@@ -7,6 +7,7 @@ if(empty($argv))
 require __DIR__."/vendor/autoload.php";
 use Phpcraft\
 {Account, ClientConnection, Command\Command, Connection, Enum\Dimension, Enum\Gamemode, Event\ServerJoinEvent, Event\ServerTickEvent, Event\SurrogateConnectEvent, Event\SurrogateConsoleEvent, Event\SurrogateTickEvent, Exception\IOException, Packet\ClientboundPacketId, Packet\EntityPacket, Packet\JoinGamePacket, Packet\KeepAliveRequestPacket, Packet\PluginMessage\ClientboundBrandPluginMessagePacket, Packet\ServerboundPacketId, Phpcraft, PluginManager, Point3D, ServerConnection, Surrogate\Server, Versions};
+use pas\pas;
 $server = Server::cliStart("Phpcraft Surrogate", [
 	"servers" => [
 		"default" => [
@@ -226,14 +227,35 @@ $server->disconnect_function = function(ClientConnection $con) use (&$integrated
 		$integrated_disconnect_function($con);
 	}
 };
-$next_tick = microtime(true) + 0.05;
-do
+pas::on("stdin_line", function(string $msg) use (&$server)
 {
-	$start = microtime(true);
-	$server->accept();
-	$server->handle();
+	if(!Command::handleMessage($server, $msg) && !PluginManager::fire(new SurrogateConsoleEvent($server, $msg)))
+	{
+		$server->broadcast([
+			"translate" => "chat.type.announcement",
+			"with" => [
+				[
+					"text" => "Surrogate"
+				],
+				[
+					"text" => $msg
+				]
+			]
+		]);
+	}
+});
+$server->open_condition->add(function(bool $lagging) use (&$server)
+{
+	PluginManager::fire(new SurrogateTickEvent($server, $lagging));
+	PluginManager::fire(new ServerTickEvent($server, $lagging));
+}, 0.05);
+$server->open_condition->add(function() use (&$server)
+{
 	foreach($server->clients as $con)
 	{
+		/**
+		 * @var ClientConnection $con
+		 */
 		try
 		{
 			if(@$con->subserver !== null && $packet_id = $con->subserver->readPacket(0))
@@ -318,37 +340,7 @@ do
 			$con->disconnect("[Surrogate] ".$e->getMessage());
 		}
 	}
-	while($msg = $server->ui->render(true))
-	{
-		if(Command::handleMessage($server, $msg) || PluginManager::fire(new SurrogateConsoleEvent($server, $msg)))
-		{
-			continue;
-		}
-		$msg = [
-			"translate" => "chat.type.announcement",
-			"with" => [
-				[
-					"text" => "Surrogate"
-				],
-				[
-					"text" => $msg
-				]
-			]
-		];
-		$server->broadcast($msg);
-	}
-	if($next_tick < microtime(true))
-	{
-		$next_tick += 0.05;
-		$lagging = $next_tick < microtime(true);
-		PluginManager::fire(new SurrogateTickEvent($server, $lagging));
-		PluginManager::fire(new ServerTickEvent($server, $lagging));
-	}
-	if(($remaining = (0.001 - (microtime(true) - $start))) > 0)
-	{
-		time_nanosleep(0, $remaining * 1000000000);
-	}
-}
-while($server->isOpen());
+}, 0.001);
+pas::loop();
 $server->ui->add("Surrogate is not listening on any ports and has no clients, so it's shutting down.");
 $server->ui->render();

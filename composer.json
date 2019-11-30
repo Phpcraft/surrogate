@@ -8,6 +8,6 @@
 		"php": "^7.1",
 		"ext-gmp": "*",
 		"ext-json": "*",
-		"craft/core": "*"
+		"craft/core": "^0.2.4"
 	}
 }
