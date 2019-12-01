@@ -4,7 +4,11 @@
  */
 use Phpcraft\
 {ClientConnection, Plugin};
-$this->registerCommand( ["join", "goto", "server"], function(ClientConnection $con, string $server_name)
+$this->registerCommand([
+	"join",
+	"goto",
+	"server"
+], function(ClientConnection $con, string $server_name)
 {
 	if($error = connectToServer($con, strtolower($server_name)))
 	{

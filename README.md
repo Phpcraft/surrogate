@@ -21,7 +21,7 @@ First, we'll clone the repository and generate the autoload script:
 ```Bash
 git clone https://github.com/Phpcraft/surrogate
 cd surrogate
-composer install --no-dev --no-suggest --ignore-platform-reqs
+composer install --no-suggest --ignore-platform-reqs
 ```
 
 Next, we'll run a self check:
