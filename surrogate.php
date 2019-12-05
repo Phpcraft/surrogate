@@ -7,7 +7,7 @@ if(empty($argv))
 require __DIR__."/vendor/autoload.php";
 use pas\pas;
 use Phpcraft\
-{ClientConnection, Command\Command, Event\ProxyConsoleEvent, Event\ProxyJoinEvent, Exception\IOException, PluginManager, ProxyServer};
+{ChatComponent, ClientConnection, Command\Command, Event\ProxyConsoleEvent, Event\ProxyJoinEvent, Exception\IOException, PluginManager, ProxyServer};
 /**
  * @var ProxyServer $server
  */
@@ -105,17 +105,10 @@ pas::on("stdin_line", function(string $msg) use (&$server)
 {
 	if(!Command::handleMessage($server, $msg) && !PluginManager::fire(new ProxyConsoleEvent($server, $msg)))
 	{
-		$server->broadcast([
-			"translate" => "chat.type.announcement",
-			"with" => [
-				[
-					"text" => "Surrogate"
-				],
-				[
-					"text" => $msg
-				]
-			]
-		]);
+		$server->broadcast(ChatComponent::translate("chat.type.announcement", [
+			"Surrogate",
+			$msg
+		]));
 	}
 });
 pas::loop();
