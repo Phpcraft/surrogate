@@ -49,8 +49,7 @@ function connectToServer(ClientConnection $con, string $server_name): ?string
 {
 	/**
 	 * @var ProxyServer $server
-	 */
-	global $server;
+	 */ global $server;
 	$subserver = @$server->config["servers"][$server_name];
 	if($subserver === null)
 	{
@@ -66,6 +65,7 @@ function connectToServer(ClientConnection $con, string $server_name): ?string
 		return $server->connectDownstream($con, $subserver["address"]);
 	}
 }
+
 $server->join_function = function(ClientConnection $con) use (&$server)
 {
 	if(PluginManager::fire(new ProxyJoinEvent($server, $con)))
