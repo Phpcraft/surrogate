@@ -5,7 +5,7 @@ if(empty($argv))
 	die("This is for PHP-CLI. Connect to your server via SSH and use `php surrogate.php`.\n");
 }
 require __DIR__."/vendor/autoload.php";
-use pas\pas;
+use Asyncore\Asyncore;
 use Phpcraft\
 {ChatComponent, ClientConnection, Command\Command, Event\ProxyConsoleEvent, Event\ProxyJoinEvent, Exception\IOException, PluginManager, ProxyServer};
 /**
@@ -101,7 +101,7 @@ $server->join_function = function(ClientConnection $con) use (&$server)
 	}
 	$con->disconnect(count($default_servers) == 0 ? "[Surrogate] There is no default server. You're either missing a permission, are supposed to connect differently, or Surrogate was misconfigured." : "[Surrogate] Failed to connect to any default server. Most recent error in connecting to $name: $error");
 };
-pas::on("stdin_line", function(string $msg) use (&$server)
+Asyncore::on("stdin_line", function(string $msg) use (&$server)
 {
 	if(!Command::handleMessage($server, $msg) && !PluginManager::fire(new ProxyConsoleEvent($server, $msg)))
 	{
@@ -111,6 +111,6 @@ pas::on("stdin_line", function(string $msg) use (&$server)
 		]));
 	}
 });
-pas::loop();
+Asyncore::loop();
 $server->ui->add("Surrogate is not listening on any ports and has no clients, so it's shutting down.");
 $server->ui->render();
